@@ -1,8 +1,0 @@
----
-# vars file for test
-keypair: rashmi
-instance_type: t2.micro
-security_group: mysecgrp
-image: ami-04681a1dbd79675a5 
-region: us-east-1
-
