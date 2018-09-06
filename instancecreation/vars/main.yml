@@ -1,8 +1,0 @@
----
-# vars file for instancecreation
-keypair: rashmi
-instance_type: t2.micro
-security_group: mysecgrp 
-image: ami-9887c6e7
-region: us-east-1
-
