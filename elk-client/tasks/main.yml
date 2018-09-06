@@ -31,7 +31,7 @@
   lineinfile:
         path: /etc/filebeat/filebeat.yml
         insertafter: '# The Logstash hosts'
-        line: '    hosts: ["192.168.50.143:5044"]'
+        line: '    hosts: ["<server-ip>:5044"]'
 
 - name: appending tls
   lineinfile:
