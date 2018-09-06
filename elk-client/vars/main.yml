@@ -2,7 +2,7 @@
 # vars file for elasticsearch
 
 elasticsearch_major_version: 6.x
-kibana_server_url: http://192.168.50.143
+kibana_server_url: http://<server-ip>
 kibana_server_port: 5601
-elasticsearch_ip: 192.168.50.143
+elasticsearch_ip: <server-ip>
 elasticsearch_server_port: 9200
