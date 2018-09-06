@@ -1,0 +1,27 @@
+---
+# tasks file for elasticsearch
+- name: installing java
+  include_role:
+     name: java
+
+- name: getting repo
+  template:
+     src: elasticsearch.repo.j2
+     dest: /etc/yum.repos.d/elasticsearch.repo
+     mode: 0644
+
+- name: installing elasticsearch
+  package: name={{ item }} state=present
+  with_items:
+   - wget
+   - elasticsearch
+   - python
+
+- name: Configure Elasticsearch.
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0750
+  notify: restart elasticsearch

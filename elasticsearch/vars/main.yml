@@ -1,0 +1,7 @@
+---
+# vars file for elasticsearch
+
+security_group: mysecgrp
+elasticsearch_major_version: 6.x
+elasticsearch_network_host: 192.168.50.143
+elasticsearch_http_port: 9200

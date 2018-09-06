@@ -1,0 +1,59 @@
+---
+# tasks file for elk-client
+
+- name: copying ssl certificate
+  template: 
+    src: logstash-forwarder.crt.j2
+    dest: /etc/pki/tls/certs 
+
+- name: getting repo
+  template:
+    src: elasticsearch.repo.j2
+    dest: /etc/yum.repos.d/elasticsearch.repo
+
+- name: installing filebeat
+  yum:
+    name: filebeat
+    state: present
+
+- name: configuring filebeat file
+  template: 
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+
+- name: appending lines
+  lineinfile:
+        path: /etc/filebeat/filebeat.yml
+        insertafter: '#logstash:'
+        line: '  logstash:'
+
+- name: appending host line
+  lineinfile:
+        path: /etc/filebeat/filebeat.yml
+        insertafter: '# The Logstash hosts'
+        line: '    hosts: ["192.168.50.143:5044"]'
+
+- name: appending tls
+  lineinfile:
+       path: /etc/filebeat/filebeat.yml
+       insertafter: '# Optional TLS. By default is off.'
+       line: '  tls:'
+
+- name: appending certificate authorities
+  lineinfile:
+        path: /etc/filebeat/filebeat.yml
+        insertbefore: '  ### File as output'
+        line: '    certificate_authorities: ["/etc/pki/tls/certs/logstash-forwarder.crt"]'
+- pause:
+    seconds: 20
+
+- name: configuring filebeat reference
+  template:
+    src: filebeat.reference.yml.j2
+    dest: /etc/filebeat/filebeat.reference.yml
+
+- name: service restart filebeat
+  command: systemctl start filebeat
+
+- name: enabling the service
+  command: systemctl enable filebeat

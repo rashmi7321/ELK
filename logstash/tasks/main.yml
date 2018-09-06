@@ -1,0 +1,43 @@
+---
+# tasks file for logstash
+- name: installing logstash
+  yum: 
+   name: logstash
+   state: present
+
+- name: adding ssl certificate to elk server
+  lineinfile:
+      path: /etc/pki/tls/openssl.cnf
+      regexp: '^# PKIX recommendation.'
+      insertafter: '^# PKIX recommendation.'
+      line: 'subjectAltName = IP: "{{ item }}"'
+  with_items:
+      - 192.168.50.143
+
+- name: Generate a self-signed SSL certificate by OpenSSL
+  command: openssl req -config /etc/pki/tls/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/logstash-forwarder.key -out certs/logstash-forwarder.crt
+  args:
+    chdir: /etc/pki/tls
+
+- name: Create /etc/logstash/conf.d/input.conf
+  template: 
+    src: input.conf.j2
+    dest: /etc/logstash/conf.d/input.conf
+
+- name:  Create /etc/logstash/conf.d/output.conf
+  template: 
+    src: output.conf.j2
+    dest: /etc/logstash/conf.d/output.conf
+
+- name: create /etc/logstash/conf.d/filter.conf
+  template: 
+    src: filter.conf.j2
+    dest: /etc/logstash/conf.d/filter.conf
+
+- name: services on for logstash
+  systemd:
+  name: logstash
+  daemon_reload: yes
+  state: started
+  enabled: yes
+

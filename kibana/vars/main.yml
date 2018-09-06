@@ -1,0 +1,6 @@
+---
+# vars file for kibana
+kibana_major_version: 6.x
+kibana_server_port: 5601
+kibana_server_host: 192.168.50.143
+kibana_elasticsearch_url: "http://{{ kibana_server_host }}:9200"
